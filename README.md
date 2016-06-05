@@ -1,5 +1,7 @@
 # Yet-Another-FIX-Parser
-A parser for FIX (Financial Information eXchange) protocol logs. It runs as a Chrome App with no network access.
+A parser for FIX (Financial Information eXchange) protocol logs. 
+
+It runs as a Chrome App that doesn't require any network access. Your input will not be sent to the Internet.
 
 <img src="img/YAFP.png" width="600">
 
