@@ -2,9 +2,14 @@
 
 function mapFields(tag_list, dic) {
   return _(tag_list)
-    .map(x => x.split('=', 2))
+    .map(splitTagAndValue)
     .map(x => translate(x, dic))
     .value();
+}
+
+function splitTagAndValue(s) {
+    const idx = s.indexOf('=');
+    return [s.substring(0, idx), s.substring(idx + 1)];
 }
 
 function translate(tag_value_pair, dic) {
@@ -35,13 +40,13 @@ function normalizeNewLines(text) {
 function parseFixMsg(text, dic) {
   // regex grouping
   // 1: prefix, 2: FIX version tag, 3. delimiter, 4. FIX body, 5. checksum
-  const re = /(.*)(8=FIX\.4\.\d)(.|\^A)(.*)\3(10=\d\d\d)\3/;
-  const re_g = /(.*)(8=FIX\.4\.\d)(.|\^A)(.*)\3(10=\d\d\d)\3/g;
+  const re = /(.*)(35=.)(.|\^A)(.*)\3(10=\d\d\d)\3/;
+  const re_g = /(.*)(35=.)(.|\^A)(.*)\3(10=\d\d\d)\3/g;
   let lines = normalizeNewLines(text);
   return _(lines.match(re_g))
     .map(x => x.match(re))
     .map(x => {
-      const fields = x[4].split(x[3]);
+      const fields = _.concat(x[2], x[4].split(x[3]));
       return {
         raw: x[0],
         prefix: x[1],
