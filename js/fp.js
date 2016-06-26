@@ -1,58 +1,64 @@
 'use strict';
 
-function mapFields(tag_list, dic) {
-  return _(tag_list)
-    .map(splitTagAndValue)
-    .map(x => translate(x, dic))
-    .value();
-}
+class FixParser {
+  constructor(dic) {
+    this._dic = dic;
+  }
+  
+  parseFixMsg(text) {
+    // regex grouping
+    // 1: prefix, 2: FIX version tag, 3. delimiter, 4. FIX body, 5. checksum
+    const re = /(.*)(35=.)(.|\^A)(.*)\3(10=\d\d\d)\3/;
+    const re_g = /(.*)(35=.)(.|\^A)(.*)\3(10=\d\d\d)\3/g;
+    let lines = this._normalizeNewLines(text);
+    return _(lines.match(re_g))
+      .map(x => x.match(re))
+      .map(x => {
+        const fields = _.concat(x[2], x[4].split(x[3]));
+        return {
+          raw: x[0],
+          prefix: x[1],
+          fields: this._mapFields(fields)
+        }
+      }).value();
+  }  
+    
+  _mapFields(tag_list) {
+    return _(tag_list)
+      .map(this._splitTagAndValue)
+      .map(x => this._translate(x, this._dic))
+      .value();
+  }
 
-function splitTagAndValue(s) {
-    const idx = s.indexOf('=');
-    return [s.substring(0, idx), s.substring(idx + 1)];
-}
+  _splitTagAndValue(s) {
+      const idx = s.indexOf('=');
+      return [s.substring(0, idx), s.substring(idx + 1)];
+  }
 
-function translate(tag_value_pair, dic) {
-  const tag = tag_value_pair[0];
-  const value = tag_value_pair[1];
-  return {
-    tag_name: tag in dic ? dic[tag].name : undefined,
-    tag: tag,
-    value: tag in dic && dic[tag].values && value in dic[tag].values ?
-      dic[tag].values[value].description
-      : value
-  };
-}
+  _translate(tag_value_pair, dic) {
+    const tag = tag_value_pair[0];
+    const value = tag_value_pair[1];
+    return {
+      tag_name: tag in dic ? dic[tag].name : undefined,
+      tag: tag,
+      value: tag in dic && dic[tag].values && value in dic[tag].values ?
+        dic[tag].values[value].description
+        : value
+    };
+  }
 
-function normalizeNewLines(text) {
-  const s = text.replace('\r', '');
-  const endsWithCheckSum = msg => msg.search(/10=\d\d\d.?\s*$/) !== -1;
-  return _(s)
-    .reduce((result, c) => {
-      if (c !== '\n' || endsWithCheckSum(result)) {
-        return result + c
-      } else {
-        return result;
-      }
-    }, "");
-}
-
-function parseFixMsg(text, dic) {
-  // regex grouping
-  // 1: prefix, 2: FIX version tag, 3. delimiter, 4. FIX body, 5. checksum
-  const re = /(.*)(35=.)(.|\^A)(.*)\3(10=\d\d\d)\3/;
-  const re_g = /(.*)(35=.)(.|\^A)(.*)\3(10=\d\d\d)\3/g;
-  let lines = normalizeNewLines(text);
-  return _(lines.match(re_g))
-    .map(x => x.match(re))
-    .map(x => {
-      const fields = _.concat(x[2], x[4].split(x[3]));
-      return {
-        raw: x[0],
-        prefix: x[1],
-        fields: mapFields(fields, dic)
-      }
-    }).value();
+  _normalizeNewLines(text) {
+    const s = text.replace('\r', '');
+    const endsWithCheckSum = msg => msg.search(/10=\d\d\d.?\s*$/) !== -1;
+    return _(s)
+      .reduce((result, c) => {
+        if (c !== '\n' || endsWithCheckSum(result)) {
+          return result + c
+        } else {
+          return result;
+        }
+      }, "");
+  }
 }
 
 function formatHeaderLine(message) {
@@ -93,7 +99,8 @@ function processInput() {
     .then(res => {
       return res.json();
     }).then(dic => {
-      const parsed_messages = parseFixMsg(in_elm.value, dic);
+      const parser = new FixParser(dic);
+      const parsed_messages = parser.parseFixMsg(in_elm.value);
       const formatted = _.map(parsed_messages, formatMessage);
       _.forEach(formatted, x => {
         append_to_out(x.header);
