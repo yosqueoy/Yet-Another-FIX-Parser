@@ -26,7 +26,7 @@ class FixParser {
   _mapFields(tag_list) {
     return _(tag_list)
       .map(this._splitTagAndValue)
-      .map(x => this._translate(x, this._dic))
+      .map(this._translate.bind(this))
       .value();
   }
 
@@ -35,14 +35,14 @@ class FixParser {
       return [s.substring(0, idx), s.substring(idx + 1)];
   }
 
-  _translate(tag_value_pair, dic) {
+  _translate(tag_value_pair) {
     const tag = tag_value_pair[0];
     const value = tag_value_pair[1];
     return {
-      tag_name: tag in dic ? dic[tag].name : undefined,
+      tag_name: tag in this._dic ? this._dic[tag].name : undefined,
       tag: tag,
-      value: tag in dic && dic[tag].values && value in dic[tag].values ?
-        dic[tag].values[value].description
+      value: tag in this._dic && this._dic[tag].values && value in this._dic[tag].values ?
+        this._dic[tag].values[value].description
         : value
     };
   }
