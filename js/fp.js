@@ -61,33 +61,41 @@ class FixParser {
   }
 }
 
-function formatHeaderLine(message) {
-  const msg_type = findValue(message.fields, "MsgType");
-  const target = findValue(message.fields, "TargetCompID");
-  const sender = findValue(message.fields, "SenderCompID");
-  const sending_time = findValue(message.fields, "SendingTime");
-  return `[${msg_type}] ${sender} -> ${target} at ${sending_time}`;
-}
+class FixFormatter {
+  constructor(message){
+    this._message = message;
+  }
 
-function findValue(fields, tag_name) {
-  const found = _.find(fields, f => f.tag_name == tag_name);
-  return found ? found.value : "unknown";
-}
+  formatMessage() {
+    const message = this._message;
+    return {
+      formatted_fields: _(message.fields).map(this._formatField).value(),
+      header: this._formatHeaderLine(),
+      prefix: message.prefix
+    };
+  }
 
-function formatField(field) {
-  const pad_length = 25;
-  let tag_text = field.tag_name ? `${field.tag_name}(${field.tag})` : field.tag;
-  tag_text = _.padEnd(tag_text, pad_length);
-  return `${tag_text}: ${field.value}`;
-}
+  _formatHeaderLine() {
+    const message = this._message;
+    const msg_type =this._findTagValue("MsgType");
+    const target =this._findTagValue("TargetCompID");
+    const sender =this._findTagValue("SenderCompID");
+    const sending_time =this._findTagValue("SendingTime");
+    return `[${msg_type}] ${sender} -> ${target} at ${sending_time}`;
+  }
 
-function formatMessage(message) {
-  const formatted_fields = _(message.fields).map(formatField).value();
-  return {
-    formatted_fields: formatted_fields,
-    header: formatHeaderLine(message),
-    prefix: message.prefix
-  };
+  _findTagValue(tag_name) {
+    const fields = this._message.fields;
+    const found = _.find(fields, f => f.tag_name == tag_name);
+    return found ? found.value : "unknown";
+  }
+
+  _formatField(field) {
+    const pad_length = 25;
+    let tag_text = field.tag_name ? `${field.tag_name}(${field.tag})` : field.tag;
+    tag_text = _.padEnd(tag_text, pad_length);
+    return `${tag_text}: ${field.value}`;
+  }
 }
 
 function processInput() {
@@ -101,7 +109,9 @@ function processInput() {
     }).then(dic => {
       const parser = new FixParser(dic);
       const parsed_messages = parser.parseFixMsg(in_elm.value);
-      const formatted = _.map(parsed_messages, formatMessage);
+      const formatted = _.map(parsed_messages, m => {
+        return new FixFormatter(m).formatMessage();
+      });
       _.forEach(formatted, x => {
         append_to_out(x.header);
         x.prefix && append_to_out(`Prefix: ${x.prefix}`);
