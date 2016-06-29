@@ -7,7 +7,7 @@ class FixParser {
   
   parseFixMsg(text) {
     // regex grouping
-    // 1: prefix, 2: FIX version tag, 3. delimiter, 4. FIX body, 5. checksum
+    // 1: prefix, 2: MsgType, 3. delimiter, 4. FIX body, 5. checksum
     const re = /(.*)(35=.)(.|\^A)(.*)\3(10=\d\d\d)\3/;
     const re_g = /(.*)(35=.)(.|\^A)(.*)\3(10=\d\d\d)\3/g;
     let lines = this._normalizeNewLines(text);
@@ -76,7 +76,6 @@ class FixFormatter {
   }
 
   _formatHeaderLine() {
-    const message = this._message;
     const msg_type =this._findTagValue("MsgType");
     const target =this._findTagValue("TargetCompID");
     const sender =this._findTagValue("SenderCompID");
@@ -107,8 +106,7 @@ function processInput() {
     .then(res => {
       return res.json();
     }).then(dic => {
-      const parser = new FixParser(dic);
-      const parsed_messages = parser.parseFixMsg(in_elm.value);
+      const parsed_messages = new FixParser(dic).parseFixMsg(in_elm.value);
       const formatted = _.map(parsed_messages, m => {
         return new FixFormatter(m).formatMessage();
       });
