@@ -37,5 +37,8 @@
     },
     "dependencies": {
         "babel-polyfill": "^6.9.1"
+    },
+    "jest": {
+        "testRegex": "tests/.*\\.js$"
     }
 }
