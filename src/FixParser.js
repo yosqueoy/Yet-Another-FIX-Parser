@@ -7,9 +7,9 @@ export default class FixParser {
 
     parseFixMsg(text) {
         // regex grouping
-        // 1: prefix, 2: MsgType, 3. delimiter, 4. FIX body, 5. checksum
-        const re = /(.*)(35=.)(.|\^A)(.*)\3(10=\d\d\d)\3/;
-        const re_g = /(.*)(35=.)(.|\^A)(.*)\3(10=\d\d\d)\3/g;
+        // 1: prefix, 2: MsgType, 3. delimiter, 4. FIX body, 5. checksum, 6. suffix
+        const re = /(.*)(35=.)(.|\^A)(.*)\3(10=\d\d\d)(.*)/;
+        const re_g = /(.*)(35=.)(.|\^A)(.*)\3(10=\d\d\d)(.*)/g;
         let lines = this._normalizeNewLines(text);
         return _(lines.match(re_g))
             .map(x => x.match(re))
