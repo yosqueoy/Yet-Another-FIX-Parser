@@ -23,11 +23,9 @@ describe("FixParser", () => {
     })
     it("parses a message with semicolon separaters", () => {
         const message = `8=FIX.4.4;9=61;35=A;49=BRKR;56=INVMGR;98=0;34=1;52=20000426-12:05:08;108=30;10=143;`;
-        const expected = [{"raw":"8=FIX.4.4;9=61;35=A;49=BRKR;56=INVMGR;98=0;34=1;52=20000426-12:05:08;108=30;10=143;","prefix":"8=FIX.4.4;9=61;","fields":[{"tag_name":"MsgType","tag":"35","value":"LOGON"},{"tag_name":"SenderCompID","tag":"49","value":"BRKR"},{"tag_name":"TargetCompID","tag":"56","value":"INVMGR"},{"tag_name":"EncryptMethod","tag":"98","value":"NONE"},{"tag_name":"MsgSeqNum","tag":"34","value":"1"},{"tag_name":"SendingTime","tag":"52","value":"20000426-12:05:08"},{"tag_name":"HeartBtInt","tag":"108","value":"30"}]}];
+        const expected = [{ "raw": "8=FIX.4.4;9=61;35=A;49=BRKR;56=INVMGR;98=0;34=1;52=20000426-12:05:08;108=30;10=143;", "prefix": "8=FIX.4.4;9=61;", "fields": [{ "tag_name": "MsgType", "tag": "35", "value": "LOGON" }, { "tag_name": "SenderCompID", "tag": "49", "value": "BRKR" }, { "tag_name": "TargetCompID", "tag": "56", "value": "INVMGR" }, { "tag_name": "EncryptMethod", "tag": "98", "value": "NONE" }, { "tag_name": "MsgSeqNum", "tag": "34", "value": "1" }, { "tag_name": "SendingTime", "tag": "52", "value": "20000426-12:05:08" }, { "tag_name": "HeartBtInt", "tag": "108", "value": "30" }] }];
         const parser = new FixParser(dic);
-        const result = parser.parseFixMsg(message); 
-        console.log(JSON.stringify(result));
+        const result = parser.parseFixMsg(message);
         expect(result).toEqual(expected);
-        
     });
 });
