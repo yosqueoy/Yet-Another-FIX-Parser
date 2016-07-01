@@ -61,33 +61,33 @@
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
   function processInput() {
-    var in_elm = document.getElementById("in");
-    var out_elm = document.getElementById("out");
-    var append_to_out = function append_to_out(s) {
-      out_elm.innerHTML += s + "<br>";
-    };
-    out_elm.innerHTML = "";
-    fetch('res/FIX.json').then(function (res) {
-      return res.json();
-    }).then(function (dic) {
-      var parsed_messages = new _FixParser2.default(dic).parseFixMsg(in_elm.value);
-      var formatted = _lodash2.default.map(parsed_messages, function (m) {
-        return new _FixFormatter2.default(m).formatMessage();
+      var in_elm = document.getElementById("in");
+      var out_elm = document.getElementById("out");
+      var append_to_out = function append_to_out(s) {
+          out_elm.innerHTML += s + "<br>";
+      };
+      out_elm.innerHTML = "";
+      fetch('res/FIX.json').then(function (res) {
+          return res.json();
+      }).then(function (dic) {
+          var parsed_messages = new _FixParser2.default(dic).parseFixMsg(in_elm.value);
+          var formatted = _lodash2.default.map(parsed_messages, function (m) {
+              return new _FixFormatter2.default(m).formatMessage();
+          });
+          _lodash2.default.forEach(formatted, function (x) {
+              append_to_out(x.header);
+              x.prefix && append_to_out("Prefix: " + x.prefix);
+              _lodash2.default.forEach(x.formatted_fields, function (f) {
+                  return append_to_out("  " + f);
+              });
+              out_elm.innerHTML += '<br>';
+          });
+          out_elm.classList.toggle("hidden", out_elm.innerHTML.length === 0);
       });
-      _lodash2.default.forEach(formatted, function (x) {
-        append_to_out(x.header);
-        x.prefix && append_to_out("Prefix: " + x.prefix);
-        _lodash2.default.forEach(x.formatted_fields, function (f) {
-          return append_to_out("  " + f);
-        });
-        out_elm.innerHTML += '<br>';
-      });
-      out_elm.classList.toggle("hidden", out_elm.innerHTML.length === 0);
-    });
   }
 
   window.onload = function () {
-    document.getElementById("in").oninput = processInput;
+      document.getElementById("in").oninput = processInput;
   };
 
 /***/ },
@@ -16508,7 +16508,7 @@
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
-    value: true
+      value: true
   });
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -16522,51 +16522,51 @@
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   var FixFormatter = function () {
-    function FixFormatter(message) {
-      _classCallCheck(this, FixFormatter);
+      function FixFormatter(message) {
+          _classCallCheck(this, FixFormatter);
 
-      this._message = message;
-    }
+          this._message = message;
+      }
 
-    _createClass(FixFormatter, [{
-      key: "formatMessage",
-      value: function formatMessage() {
-        var message = this._message;
-        return {
-          formatted_fields: (0, _lodash2.default)(message.fields).map(this._formatField).value(),
-          header: this._formatHeaderLine(),
-          prefix: message.prefix
-        };
-      }
-    }, {
-      key: "_formatHeaderLine",
-      value: function _formatHeaderLine() {
-        var msg_type = this._findTagValue("MsgType");
-        var target = this._findTagValue("TargetCompID");
-        var sender = this._findTagValue("SenderCompID");
-        var sending_time = this._findTagValue("SendingTime");
-        return "[" + msg_type + "] " + sender + " -> " + target + " at " + sending_time;
-      }
-    }, {
-      key: "_findTagValue",
-      value: function _findTagValue(tag_name) {
-        var fields = this._message.fields;
-        var found = _lodash2.default.find(fields, function (f) {
-          return f.tag_name == tag_name;
-        });
-        return found ? found.value : "unknown";
-      }
-    }, {
-      key: "_formatField",
-      value: function _formatField(field) {
-        var pad_length = 25;
-        var tag_text = field.tag_name ? field.tag_name + "(" + field.tag + ")" : field.tag;
-        tag_text = _lodash2.default.padEnd(tag_text, pad_length);
-        return tag_text + ": " + field.value;
-      }
-    }]);
+      _createClass(FixFormatter, [{
+          key: "formatMessage",
+          value: function formatMessage() {
+              var message = this._message;
+              return {
+                  formatted_fields: (0, _lodash2.default)(message.fields).map(this._formatField).value(),
+                  header: this._formatHeaderLine(),
+                  prefix: message.prefix
+              };
+          }
+      }, {
+          key: "_formatHeaderLine",
+          value: function _formatHeaderLine() {
+              var msg_type = this._findTagValue("MsgType");
+              var target = this._findTagValue("TargetCompID");
+              var sender = this._findTagValue("SenderCompID");
+              var sending_time = this._findTagValue("SendingTime");
+              return "[" + msg_type + "] " + sender + " -> " + target + " at " + sending_time;
+          }
+      }, {
+          key: "_findTagValue",
+          value: function _findTagValue(tag_name) {
+              var fields = this._message.fields;
+              var found = _lodash2.default.find(fields, function (f) {
+                  return f.tag_name == tag_name;
+              });
+              return found ? found.value : "unknown";
+          }
+      }, {
+          key: "_formatField",
+          value: function _formatField(field) {
+              var pad_length = 25;
+              var tag_text = field.tag_name ? field.tag_name + "(" + field.tag + ")" : field.tag;
+              tag_text = _lodash2.default.padEnd(tag_text, pad_length);
+              return tag_text + ": " + field.value;
+          }
+      }]);
 
-    return FixFormatter;
+      return FixFormatter;
   }();
 
   exports.default = FixFormatter;
@@ -16579,7 +16579,7 @@
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
-    value: true
+      value: true
   });
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -16593,73 +16593,73 @@
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   var FixParser = function () {
-    function FixParser(dic) {
-      _classCallCheck(this, FixParser);
+      function FixParser(dic) {
+          _classCallCheck(this, FixParser);
 
-      this._dic = dic;
-    }
+          this._dic = dic;
+      }
 
-    _createClass(FixParser, [{
-      key: 'parseFixMsg',
-      value: function parseFixMsg(text) {
-        var _this = this;
+      _createClass(FixParser, [{
+          key: 'parseFixMsg',
+          value: function parseFixMsg(text) {
+              var _this = this;
 
-        // regex grouping
-        // 1: prefix, 2: MsgType, 3. delimiter, 4. FIX body, 5. checksum
-        var re = /(.*)(35=.)(.|\^A)(.*)\3(10=\d\d\d)\3/;
-        var re_g = /(.*)(35=.)(.|\^A)(.*)\3(10=\d\d\d)\3/g;
-        var lines = this._normalizeNewLines(text);
-        return (0, _lodash2.default)(lines.match(re_g)).map(function (x) {
-          return x.match(re);
-        }).map(function (x) {
-          var fields = _lodash2.default.concat(x[2], x[4].split(x[3]));
-          return {
-            raw: x[0],
-            prefix: x[1],
-            fields: _this._mapFields(fields)
-          };
-        }).value();
-      }
-    }, {
-      key: '_mapFields',
-      value: function _mapFields(tag_list) {
-        return (0, _lodash2.default)(tag_list).map(this._splitTagAndValue).map(this._translate.bind(this)).value();
-      }
-    }, {
-      key: '_splitTagAndValue',
-      value: function _splitTagAndValue(s) {
-        var idx = s.indexOf('=');
-        return [s.substring(0, idx), s.substring(idx + 1)];
-      }
-    }, {
-      key: '_translate',
-      value: function _translate(tag_value_pair) {
-        var tag = tag_value_pair[0];
-        var value = tag_value_pair[1];
-        return {
-          tag_name: tag in this._dic ? this._dic[tag].name : undefined,
-          tag: tag,
-          value: tag in this._dic && this._dic[tag].values && value in this._dic[tag].values ? this._dic[tag].values[value].description : value
-        };
-      }
-    }, {
-      key: '_normalizeNewLines',
-      value: function _normalizeNewLines(text) {
-        var s = text.replace('\r', '');
-        var endsWithCheckSum = function endsWithCheckSum(msg) {
-          return msg.search(/10=\d\d\d.?\s*$/) !== -1;
-        };
-        return (0, _lodash2.default)(s).reduce(function (result, c) {
-          if (c !== '\n' || endsWithCheckSum(result)) {
-            return result + c;
-          } else {
-            return result;
+              // regex grouping
+              // 1: prefix, 2: MsgType, 3. delimiter, 4. FIX body, 5. checksum, 6. suffix
+              var re = /(.*)(35=.)(.|\^A)(.*)\3(10=\d\d\d)(.*)/;
+              var re_g = /(.*)(35=.)(.|\^A)(.*)\3(10=\d\d\d)(.*)/g;
+              var lines = this._normalizeNewLines(text);
+              return (0, _lodash2.default)(lines.match(re_g)).map(function (x) {
+                  return x.match(re);
+              }).map(function (x) {
+                  var fields = _lodash2.default.concat(x[2], x[4].split(x[3]));
+                  return {
+                      raw: x[0],
+                      prefix: x[1],
+                      fields: _this._mapFields(fields)
+                  };
+              }).value();
           }
-        }, "");
-      }
-    }]);
+      }, {
+          key: '_mapFields',
+          value: function _mapFields(tag_list) {
+              return (0, _lodash2.default)(tag_list).map(this._splitTagAndValue).map(this._translate.bind(this)).value();
+          }
+      }, {
+          key: '_splitTagAndValue',
+          value: function _splitTagAndValue(s) {
+              var idx = s.indexOf('=');
+              return [s.substring(0, idx), s.substring(idx + 1)];
+          }
+      }, {
+          key: '_translate',
+          value: function _translate(tag_value_pair) {
+              var tag = tag_value_pair[0];
+              var value = tag_value_pair[1];
+              return {
+                  tag_name: tag in this._dic ? this._dic[tag].name : undefined,
+                  tag: tag,
+                  value: tag in this._dic && this._dic[tag].values && value in this._dic[tag].values ? this._dic[tag].values[value].description : value
+              };
+          }
+      }, {
+          key: '_normalizeNewLines',
+          value: function _normalizeNewLines(text) {
+              var s = text.replace('\r', '');
+              var endsWithCheckSum = function endsWithCheckSum(msg) {
+                  return msg.search(/10=\d\d\d.?\s*$/) !== -1;
+              };
+              return (0, _lodash2.default)(s).reduce(function (result, c) {
+                  if (c !== '\n' || endsWithCheckSum(result)) {
+                      return result + c;
+                  } else {
+                      return result;
+                  }
+              }, "");
+          }
+      }]);
 
-    return FixParser;
+      return FixParser;
   }();
 
   exports.default = FixParser;
