@@ -23,7 +23,7 @@ h1 {
 	text-rendering: optimizeLegibility;
 }
 
-#out {
+.output {
     margin-top: 30px;
     -webkit-user-select: text;
 }

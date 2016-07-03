@@ -17,4 +17,4 @@ Start from Chrome app launcher (chrome://apps).
 Paste FIX logs in the top text area. The delimiter of FIX tags can be any single character, including |, ^ and a control character like SOH.
 
 # Custom tags
-You can add your custom tags to the parser. FIX tags are defined in js/FIX.json file.
+You can add your custom tags to the parser. FIX tags are defined in res/FIX.json file.
