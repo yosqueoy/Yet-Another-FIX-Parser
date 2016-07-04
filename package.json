@@ -6,8 +6,9 @@
   "scripts": {
     "compile": "webpack --verbose",
     "lint": "eslint ./src",
-    "test": "jest",
-    "build": "npm run lint && npm run test && npm run compile"
+    "lint-fix": "eslint ./src --fix",
+    "test": "jest || true",
+    "build": "npm run lint; npm run test; npm run compile"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,7 @@
   "homepage": "https://github.com/yosqueoy/Yet-Another-FIX-Parser#readme",
   "devDependencies": {
     "babel-core": "^6.10.4",
+    "babel-eslint": "^6.1.0",
     "babel-jest": "^13.0.0",
     "babel-loader": "^6.2.4",
     "babel-plugin-add-module-exports": "^0.2.1",

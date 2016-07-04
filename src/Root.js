@@ -1,12 +1,14 @@
 import React from "react";
-import _ from "lodash";
 import InputView from "./InputView";
 import OutputView from "./OutputView";
 
 export default class Root extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {input: "", outputVm: ""};
+        this.state = {
+            input: "", 
+            outputVm: ""
+        };
     }
 
     handleInput(input) {
@@ -20,7 +22,7 @@ export default class Root extends React.Component {
     render() {
         return (
             <div>
-                <InputView input={this.state.input} onInput={(e) => this.handleInput(e)} />
+                <InputView input={this.state.input} onInput={e => this.handleInput(e)} />
                 <OutputView outputVm={this.state.outputVm} />
             </div>
         );

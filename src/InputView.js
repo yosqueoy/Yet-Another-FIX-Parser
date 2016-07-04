@@ -1,5 +1,4 @@
 import React from "react";
-import _ from "lodash";
 
 export default class InputView extends React.Component {
     static propTypes = {
@@ -15,9 +14,9 @@ export default class InputView extends React.Component {
         return <textarea
             value={this.props.input}
             ref="input"
-            onInput={(e) => this.handleInput(e) }
-            placeholder='Input FIX log here.'
-            className='form-control'
-            rows='10'></textarea>
+            onInput={e => this.handleInput(e) }
+            placeholder="Input FIX log here."
+            className="form-control"
+            rows="10"></textarea>
     }
 }

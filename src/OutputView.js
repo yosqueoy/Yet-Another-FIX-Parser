@@ -6,13 +6,12 @@ import FixFormatter from "./FixFormatter";
 export default class OutputView extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { output: "" };
+        this.state = {output: ""};
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(`componentWillReceiveProps`);
         this._processInput(nextProps.outputVm).then(out => {
-            this.setState({ output: out });
+            this.setState({output: out});
         });
     }
 
@@ -24,7 +23,7 @@ export default class OutputView extends React.Component {
     }
 
     _createMarkup(s) {
-        return { __html: s };
+        return {__html: s};
     }
 
     _processInput(input) {

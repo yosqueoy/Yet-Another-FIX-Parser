@@ -1,14 +1,23 @@
 module.exports = {
+    "parser": "babel-eslint",
     "env": {
         "browser": true,
         "commonjs": true,
         "es6": true
     },
+    "plugins": [
+        "react"
+    ],
     "extends": "eslint:recommended",
     "parserOptions": {
-        "sourceType": "module"
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }
     },
     "rules": {
+        "strict": 0,
+        "react/jsx-uses-vars": 1,
         "accessor-pairs": "error",
         "array-bracket-spacing": [
             "error",
