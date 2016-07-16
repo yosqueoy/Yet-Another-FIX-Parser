@@ -2,28 +2,44 @@ import React from "react";
 import _ from "lodash";
 import FixParser from "./FixParser";
 import FixFormatter from "./FixFormatter";
+import AlertPanel from "./AlertPanel";
 
 export default class OutputView extends React.Component {
+    static propTypes = {
+        outputVm: React.PropTypes.string.isRequired
+    }
+
     constructor(props) {
         super(props);
-        this.state = {output: ""};
+        this.state = { output: "" };
     }
 
     componentWillReceiveProps(nextProps) {
         this._processInput(nextProps.outputVm).then(out => {
-            this.setState({output: out});
+            this.setState({ output: out });
         });
     }
 
     render() {
-        const style = `output ${this.state.output.length === 0 ? "hidden" : ""}`;
-        return <pre
-            className={style}
-            dangerouslySetInnerHTML={this._createMarkup(this.state.output) } />;
+        const isOutputBlank = _.isEmpty(this.state.output);
+        const style = `output ${isOutputBlank ? "hidden" : ""}`;
+        let alert = "";
+        if (!_.isEmpty(this.props.outputVm) && isOutputBlank) {
+            alert = "Invalid input.";
+        }
+        const alertPanel = <AlertPanel text={alert} />;
+        return (
+            <div>
+                {alertPanel}
+                <pre
+                    className={style}
+                    dangerouslySetInnerHTML={this._createMarkup(this.state.output) } />
+            </div>
+        );
     }
 
     _createMarkup(s) {
-        return {__html: s};
+        return { __html: s };
     }
 
     _processInput(input) {
