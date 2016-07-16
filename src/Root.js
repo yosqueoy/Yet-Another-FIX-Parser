@@ -12,7 +12,7 @@ export default class Root extends React.Component {
     }
 
     handleInput(input) {
-        const outputVm = `TEST: ${input}`;
+        const outputVm = `${input}`;
         this.setState({
             input: input,
             outputVm: outputVm
