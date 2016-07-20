@@ -49,7 +49,7 @@ export default class FixParser {
 
     _normalizeNewLines(text) {
         const s = text.replace('\r', '');
-        const endsWithCheckSum = msg => msg.search(/10=\d\d\d.?\s*$/) !== -1;
+        const endsWithCheckSum = msg => msg.search(/10=\d\d\d(.?|\^A)\s*$/) !== -1;
         return _(s)
             .reduce((result, c) => {
                 if (c !== '\n' || endsWithCheckSum(result)) {
