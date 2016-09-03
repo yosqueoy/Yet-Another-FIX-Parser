@@ -1,6 +1,9 @@
 # Yet-Another-FIX-Parser
 Yet Another FIX Parser is a parser for FIX (Financial Information eXchange) protocol logs. 
 It runs as a Chrome App that doesn't require any network access. Your input will not be sent to the Internet.
+Also you can run the application on any http server by simply specifying index.html as a start page.
+
+The web app version is available on hyperdev, [https://luck-razor.hyperdev.space/](https://luck-razor.hyperdev.space/)
 
 <img src="img/YAFP.png" width="600">
 
