@@ -1,46 +1,40 @@
 {
-  "name": "yafp",
-  "version": "1.2.1",
-  "description": "Yet Another FIX Parser",
+  "name": "fp",
+  "version": "2.2.1",
+  "description": "FIX Parser",
   "main": "main.js",
   "scripts": {
     "compile": "webpack --verbose",
-    "lint": "eslint ./src",
-    "lint-fix": "eslint ./src --fix",
-    "test": "jest || true",
-    "build": "npm run lint; npm run test; npm run compile"
+    "release": "webpack --verbose --env.release",
+    "test": "jest || true"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yosqueoy/Yet-Another-FIX-Parser.git"
+    "url": ""
   },
-  "author": "yosqueoy",
+  "author": "yo",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/yosqueoy/Yet-Another-FIX-Parser/issues"
-  },
-  "homepage": "https://github.com/yosqueoy/Yet-Another-FIX-Parser#readme",
   "devDependencies": {
-    "babel-core": "^6.10.4",
-    "babel-eslint": "^6.1.0",
-    "babel-jest": "^13.0.0",
-    "babel-loader": "^6.2.4",
+    "babel-core": "^6.24.0",
+    "babel-eslint": "^7.1.1",
+    "babel-jest": "^19.0.0",
+    "babel-loader": "^6.4.1",
     "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-polyfill": "^6.9.1",
-    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-env": "^1.1.8",
+    "babel-preset-latest": "^6.16.0",
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-0": "^6.5.0",
-    "eslint": "^3.1.0",
-    "eslint-plugin-react": "^5.2.2",
-    "jest-cli": "^13.0.0",
-    "json-loader": "^0.5.4",
+    "jest": "^19.0.2",
+    "jest-cli": "^19.0.2",
     "lodash": "^4.13.1",
     "react": "^15.2.0",
     "react-dom": "^15.2.0",
-    "webpack": "^1.13.1"
+    "webpack": "^2.3.3"
   },
   "dependencies": {
-    "babel-polyfill": "^6.9.1"
+    "lodash": "^4.17.4",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2"
   },
   "jest": {
     "testRegex": "tests/.*\\.js$"
