@@ -3,28 +3,28 @@ import _ from "lodash";
 import FixParser from "./FixParser";
 import FixFormatter from "./FixFormatter";
 import AlertPanel from "./AlertPanel";
+import fixDic from "json-loader!./FixDic.json";
 
 export default class OutputView extends React.Component {
     static propTypes = {
-        outputVm: React.PropTypes.string.isRequired
+        outputVm: React.PropTypes.object.isRequired
     }
 
     constructor(props) {
         super(props);
-        this.state = { output: "" };
+        this.state = { output: {} };
     }
 
     componentWillReceiveProps(nextProps) {
-        this._processInput(nextProps.outputVm).then(out => {
-            this.setState({ output: out });
-        });
+        const out = this._processInput(nextProps.outputVm);
+        this.setState({ output: out });
     }
 
     render() {
         const isOutputBlank = _.isEmpty(this.state.output);
         const style = `output ${isOutputBlank ? "hidden" : ""}`;
         let alert = "";
-        if (!_.isEmpty(this.props.outputVm) && isOutputBlank) {
+        if (!_.isEmpty(this.props.outputVm.fixText) && isOutputBlank) {
             alert = "Invalid input.";
         }
         const alertPanel = <AlertPanel text={alert} />;
@@ -43,25 +43,20 @@ export default class OutputView extends React.Component {
     }
 
     _processInput(input) {
-        return fetch('res/FIX.json')
-            .then(res => {
-                return res.json();
-            })
-            .then(dic => {
-                let out = "";
-                const append_to_out = s => { out += `${s}<br>`; };
-                const parsed_messages = new FixParser(dic).parseFixMsg(input);
-                const formatted = _.map(parsed_messages, m => {
-                    return new FixFormatter(m).formatMessage();
-                });
-                _.forEach(formatted, x => {
-                    append_to_out(x.header);
-                    x.prefix && append_to_out(`Prefix: ${x.prefix}`);
-                    _.forEach(x.formatted_fields, f => append_to_out(`  ${f}`));
-                    out += '<br>';
-                });
-                return out;
-            });
+        let out = "";
+        const append_to_out = s => { out += `${s}<br>`; };
+        const filter_list = input.showHeader ? []: ["8", "9", "10", "34"];
+        const parsed_messages = new FixParser(fixDic).parseFixMsg(input.fixText, filter_list);
+        const formatted = _.map(parsed_messages, m => {
+            return new FixFormatter(m).formatMessage();
+        });
+        _.forEach(formatted, x => {
+            append_to_out(x.header);
+            x.prefix && append_to_out(`Prefix: ${x.prefix}`);
+            _.forEach(x.formatted_fields, f => append_to_out(`  ${f}`));
+            out += '<br>';
+        });
+        return out;
     }
 
 }

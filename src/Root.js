@@ -6,23 +6,20 @@ export default class Root extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            input: "", 
-            outputVm: ""
+            outputVm: {fixText: "", showHeader:false} 
         };
     }
 
-    handleInput(input) {
-        const outputVm = `${input}`;
+    handleInput(e) {
         this.setState({
-            input: input,
-            outputVm: outputVm
+            outputVm: {fixText: e.fixText, showHeader: e.showHeader}
         });
     }
 
     render() {
         return (
             <div>
-                <InputView input={this.state.input} onInput={e => this.handleInput(e)} />
+                <InputView fixText={this.state.outputVm.fixText} showHeader={this.state.outputVm.showHeader} onInput={e => this.handleInput(e)} />
                 <OutputView outputVm={this.state.outputVm} />
             </div>
         );
