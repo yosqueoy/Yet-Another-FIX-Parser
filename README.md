@@ -8,7 +8,7 @@ The web app version is available on hyperdev, [https://luck-razor.hyperdev.space
 # Installation
 
 1. Clone this repository.
-2. Run yarn in the directory
+2. Run [yarn](https://yarnpkg.com) in the directory
 
 # Usage
 
