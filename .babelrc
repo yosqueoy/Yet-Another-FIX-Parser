@@ -1,10 +1,7 @@
 {
   "presets": [
-    "es2015",
+      ["env", {"targets": {"chrome":55}}],
     "stage-0",
     "react"
-  ],
-  "plugins": [
-    "add-module-exports"
   ]
 }
